@@ -5,8 +5,8 @@ export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
   constructor(protected readonly exchange: Exchange) {}
 
   protected mapBookLevel(level: BittrexBookLevel) {
-    const amount = Number(level.quantity) // quantity
-    const price = Number(level.rate) // rate
+    const amount = Number(level.quantity)
+    const price = Number(level.rate)
     return { price, amount }
   }
 
@@ -17,11 +17,11 @@ export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
     return
   }
 
-  protected getSymbolFromMessage(message: any) {
-    return message.stream.split('@')[0].toUpperCase()
+  protected getSymbolFromMessage(message: string) {
+    return message.split('@')[0].toUpperCase()
   }
 
-  canHandle(message: any) {
+  canHandle(message: BittrexOrderBook) {
     if (message.stream === undefined) {
       return false
     }
@@ -41,14 +41,14 @@ export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
   }
 
   *map(message: BittrexOrderBook, localTimestamp: Date): IterableIterator<BookChange> {
-    const symbol = this.getSymbolFromMessage(message)
+    const symbol = this.getSymbolFromMessage(message.stream)
     const data = message.data
 
     const bookChange: BookChange = {
       type: 'book_change',
       symbol,
       exchange: this.exchange,
-      isSnapshot: true,
+      isSnapshot: false,
       bids: data.bid.map(this.mapBookLevel),
       asks: data.ask.map(this.mapBookLevel),
       timestamp: localTimestamp,

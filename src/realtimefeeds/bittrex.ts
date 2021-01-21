@@ -38,13 +38,14 @@ class BittrexOrderBookClient extends PoolingClientBase {
             return
           }
 
-          const orderBookResponse = (await got
+          const orderBookResponse = await got
             .get(`${this._httpURL}/markets/${instrument.toUpperCase()}/orderbook?depth=${this._context.depth}`, { timeout: 2000 })
-            .json()) as any
+            .json()
 
           const orderBookMessage = {
             stream: `${instrument.toLocaleLowerCase()}@orderBook`,
             generated: true,
+            timestamp: new Date(),
             data: orderBookResponse
           }
 

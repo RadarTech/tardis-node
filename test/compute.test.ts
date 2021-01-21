@@ -4,6 +4,7 @@ import {
   computeBookSnapshots,
   computeTradeBars,
   normalizeBookChanges,
+  NormalizedData,
   normalizeTrades,
   replayNormalized,
   Trade
@@ -25,7 +26,7 @@ describe('compute(messages, types)', () => {
         ...normalizers
       )
 
-      const bufferedMessages = []
+      const bufferedMessages: NormalizedData[] = []
       const withComputedTypes = compute(
         bitmexMessages,
         computeBookSnapshots({ depth: 10, interval: 1000 }),
