@@ -6,6 +6,7 @@ import {
   BinanceUSRealTimeFeed,
   BinanceDeliveryRealTimeFeed
 } from './binance'
+import { BittrexRealTimeFeed } from './bittrex'
 import { BinanceDexRealTimeFeed } from './binancedex'
 import { BitfinexRealTimeFeed } from './bitfinex'
 import { BitflyerRealTimeFeed } from './bitflyer'
@@ -36,6 +37,7 @@ const realTimeFeedsMap: {
 } = {
   bitmex: BitmexRealTimeFeed,
   binance: BinanceRealTimeFeed,
+  bittrex: BittrexRealTimeFeed,
   'binance-jersey': BinanceJerseyRealTimeFeed,
   'binance-us': BinanceUSRealTimeFeed,
   'binance-dex': BinanceDexRealTimeFeed,
