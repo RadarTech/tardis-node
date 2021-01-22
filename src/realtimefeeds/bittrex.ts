@@ -44,25 +44,28 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         if (!filter.symbols || filter.symbols.length === 0) {
           throw new Error('BittrexRealTimeFeed requires explicitly specified symbols when subscribing to live feed')
         }
-
         return {
           H: 'c3',
-          M: 'Subscribe',
-          A: filter.symbols.map((_) => ['heartbeat', `oderbook_BTC-USD_25`]),
+          M: 'subscribe',
+          A: filter.symbols.map((_) => ['heartbeat', `oderbook_BTC-USD_25`, `orderBook`]),
           I: index + 1
         }
       })
-    console.log('payload:', JSON.stringify(payload))
     return payload
   }
 
-  protected messageIsError(message: any): boolean {
-    console.log(message)
+  protected messageIsError(message: BittrexMessageErrorType): boolean {
+    if (message.R) {
+      for (let msg of message.R) {
+        if (!msg.Success) {
+          return true
+        }
+      }
+    }
     return false
   }
 
   protected async getWssPath() {
-    console.log("asd")
     let wssPath = undefined
     while (!wssPath) {
       try {
@@ -72,7 +75,6 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
           .json()
         console.log(negotiations)
         const token = encodeURIComponent(negotiations.ConnectionToken)
-        console.log(token)
         wssPath = `${this.wssURL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${data}&tid=10`
       } catch (error) {
         await wait(this._timeoutIntervalMS || 1000)
@@ -82,7 +84,6 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
   }
 
   protected async provideManualSnapshots(filters: Filter<string>[], shouldCancel: () => boolean) {
-    console.log('filters', filters)
     const depthSnapshotFilter = filters.find((f) => f.channel === 'depthSnapshot')
     if (!depthSnapshotFilter) {
       return
@@ -94,7 +95,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
       }
 
       const orderBookResponse = await got
-        .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/orderbook?depth=500`, { timeout: 2000 })
+        .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/orderbook?depth=25`, { timeout: 2000 })
         .json()
 
       const snapshot = {
@@ -118,3 +119,7 @@ export class BittrexRealTimeFeed extends BittrexRealTimeFeedBase {
     depth: 500
   }
 }
+
+type BittrexMessageErrorType = { R: BittrexResponseStatusType[]; I: '1' }
+
+type BittrexResponseStatusType = { Success: boolean; ErrorCode: string }

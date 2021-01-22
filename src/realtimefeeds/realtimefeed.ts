@@ -177,6 +177,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
     if (this._ws.readyState !== WebSocket.OPEN) {
       return
     }
+    console.log("send -> ", JSON.stringify(msg))
     this._ws.send(JSON.stringify(msg))
   }
 
@@ -232,7 +233,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
   private _onConnectionEstabilished = async () => {
     try {
       const subscribeMessages = this.mapToSubscribeMessages(this._filters)
-
       let symbolsCount = this._filters.reduce((prev, curr) => {
         if (curr.symbols !== undefined) {
           for (const symbol of curr.symbols) {
