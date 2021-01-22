@@ -1,8 +1,7 @@
 import got from 'got'
-import { Writable } from 'stream'
-import { batch } from '../handy'
+import { wait } from '../handy'
 import { Filter } from '../types'
-import { MultiConnectionRealTimeFeedBase, PoolingClientBase, RealTimeFeedBase } from './realtimefeed'
+import { MultiConnectionRealTimeFeedBase, RealTimeFeedBase } from './realtimefeed'
 
 abstract class BittrexRealTimeFeedBase extends MultiConnectionRealTimeFeedBase {
   protected abstract wssURL: string
@@ -49,7 +48,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         return {
           H: 'c3',
           M: 'Subscribe',
-          A: filter.symbols.map((symbol) => ['heartbeat', `ticker_${symbol.toUpperCase()}`]),
+          A: filter.symbols.map((_) => ['heartbeat', `oderbook_BTC-USD_25`]),
           I: index + 1
         }
       })
@@ -60,6 +59,26 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
   protected messageIsError(message: any): boolean {
     console.log(message)
     return false
+  }
+
+  protected async getWssPath() {
+    console.log("asd")
+    let wssPath = undefined
+    while (!wssPath) {
+      try {
+        const data = JSON.stringify([{ name: 'c3' }])
+        const negotiations: { ConnectionToken: string } = await got
+          .get(`https://socket-v3.bittrex.com/signalr/negotiate?connectionData=${data}&clientProtocol=1.5`)
+          .json()
+        console.log(negotiations)
+        const token = encodeURIComponent(negotiations.ConnectionToken)
+        console.log(token)
+        wssPath = `${this.wssURL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${data}&tid=10`
+      } catch (error) {
+        await wait(this._timeoutIntervalMS || 1000)
+      }
+    }
+    return wssPath
   }
 
   protected async provideManualSnapshots(filters: Filter<string>[], shouldCancel: () => boolean) {
@@ -96,6 +115,6 @@ export class BittrexRealTimeFeed extends BittrexRealTimeFeedBase {
   protected httpURL = 'https://api.bittrex.com/v3'
 
   protected suffixes = {
-    depth: 500,
+    depth: 500
   }
 }

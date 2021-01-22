@@ -26,7 +26,7 @@ export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
       return false
     }
 
-    return message.stream.includes('@orderBook')
+    return message.stream.includes('@depthSnapshot')
   }
 
   getFilters(symbols?: string[]) {
@@ -34,7 +34,11 @@ export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
 
     return [
       {
-        channel: 'orderBook',
+        channel: 'depth',
+        symbols
+      } as const,
+      {
+        channel: 'depthSnapshot',
         symbols
       } as const
     ]

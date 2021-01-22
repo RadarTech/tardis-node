@@ -35,7 +35,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
   constructor(
     protected readonly _exchange: string,
     filters: Filter<string>[],
-    private readonly _timeoutIntervalMS: number | undefined,
+    protected readonly _timeoutIntervalMS: number | undefined,
     private readonly _onError?: (error: Error) => void
   ) {
     this._filters = optimizeFilters(filters)
@@ -60,7 +60,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
           subscribeMessages
         )
 
-        this._ws = new WebSocket(this.wssURL, { perMessageDeflate: false, handshakeTimeout: 10 * ONE_SEC_IN_MS })
+        this._ws = new WebSocket(await this.getWssPath(), { perMessageDeflate: false, handshakeTimeout: 10 * ONE_SEC_IN_MS })
 
         this._ws.onopen = this._onConnectionEstabilished
         this._ws.onclose = this._onConnectionClosed
@@ -74,6 +74,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
         }) as AsyncIterableIterator<Buffer>
 
         for await (let message of realtimeMessagesStream) {
+          console.log(message)
           if (this.decompress !== undefined) {
             message = this.decompress(message)
           }
@@ -114,6 +115,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
         }
         yield undefined
       } catch (error) {
+        console.log(error)
         if (this._onError !== undefined) {
           this._onError(error)
         }
@@ -163,6 +165,9 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
         }
       }
     }
+  }
+  protected async getWssPath(): Promise<string> {
+    return this.wssURL
   }
 
   protected send(msg: any) {
@@ -261,6 +266,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
 
       await this.provideManualSnapshots(this._filters, () => this._ws!.readyState === WebSocket.CLOSED)
     } catch (e) {
+      console.log(e)
       this.debug('(connection id: %d) providing manual snapshots error: %o', this._connectionId, e)
       this._ws!.emit('error', e)
     }
@@ -275,7 +281,7 @@ export abstract class MultiConnectionRealTimeFeedBase implements RealTimeFeedIte
   constructor(
     private readonly _exchange: string,
     private readonly _filters: Filter<string>[],
-    private readonly _timeoutIntervalMS: number | undefined,
+    protected readonly _timeoutIntervalMS: number | undefined,
     private readonly _onError?: (error: Error) => void
   ) {}
 
