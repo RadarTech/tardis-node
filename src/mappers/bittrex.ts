@@ -1,72 +1,62 @@
+import { inflateRawSync } from 'zlib'
 import { BookChange, Exchange } from '../types'
 import { Mapper } from './mapper'
 
-export class BittrexBookChangeMapper implements Mapper<'bittrex', BookChange> {
+export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
   constructor(protected readonly exchange: Exchange) {}
 
-  protected mapBookLevel(level: BittrexBookLevel) {
-    const amount = Number(level.quantity)
-    const price = Number(level.rate)
-    return { price, amount }
-  }
-
-  protected lowerCaseSymbols(symbols?: string[]) {
-    if (symbols !== undefined) {
-      return symbols.map((s) => s.toLowerCase())
-    }
-    return
-  }
-
-  protected getSymbolFromMessage(message: string) {
-    return message.split('@')[0].toUpperCase()
-  }
-
-  canHandle(message: BittrexOrderBook) {
-    if (message.stream === undefined) {
-      return false
-    }
-
-    return message.stream.includes('@depthSnapshot')
+  canHandle(message: any) {
+    return Array.isArray(message.M) && message.M.length > 0
   }
 
   getFilters(symbols?: string[]) {
-    symbols = this.lowerCaseSymbols(symbols)
-
     return [
       {
-        channel: 'depth',
+        channel: 'depthSnapshot',
         symbols
       } as const,
       {
-        channel: 'depthSnapshot',
+        channel: 'orderBook',
         symbols
       } as const
     ]
   }
 
-  *map(message: BittrexOrderBook, localTimestamp: Date): IterableIterator<BookChange> {
-    const symbol = this.getSymbolFromMessage(message.stream)
-    const data = message.data
-
+  *map(message: any, localTimestamp: Date): IterableIterator<BookChange> {
+    const data: BittrexOrderChange = decodeMessage(message)
     const bookChange: BookChange = {
       type: 'book_change',
-      symbol,
+      symbol: 'ETH',
       exchange: this.exchange,
       isSnapshot: false,
-      bids: data.bid.map(this.mapBookLevel),
-      asks: data.ask.map(this.mapBookLevel),
+      bids: data.bidDeltas.map(mapBookLevel),
+      asks: data.askDeltas.map(mapBookLevel),
       timestamp: localTimestamp,
       localTimestamp
     }
-
+    console.log(bookChange)
     yield bookChange
   }
 }
 
-type BittrexOrderBook = {
-  channel: 'orderbook'
-  stream: string
-  data: { bid: BittrexBookLevel[]; ask: BittrexBookLevel[] }
+function mapBookLevel(level: BittrexBookLevel) {
+  const amount = Number(level.quantity)
+  const price = Number(level.rate)
+  return { price, amount }
 }
 
 type BittrexBookLevel = { quantity: number; rate: number }
+
+type BittrexOrderChange = {
+  marketSymbol: string // 'ETH-USD'
+  depth: number
+  sequence: number
+  bidDeltas: BittrexBookLevel[]
+  askDeltas: BittrexBookLevel[]
+}
+//TODO: (@jpgonzalezra) refactor this method
+function decodeMessage(message: any) {
+  return message.M.map((books: { A: string[] }) =>
+    books.A.map((book) => JSON.parse(inflateRawSync(Buffer.from(book, 'base64')).toString()))
+  )[0][0]
+}

@@ -4,7 +4,7 @@ async function run() {
   const messages = streamNormalized(
     {
       exchange: 'bittrex',
-      symbols: ['ETH-USD']
+      symbols: ['ETH-USD', 'ETH-BTC']
     },
     normalizeBookChanges
   )
