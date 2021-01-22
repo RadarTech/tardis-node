@@ -44,19 +44,23 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         if (!filter.symbols || filter.symbols.length === 0) {
           throw new Error('BittrexRealTimeFeed requires explicitly specified symbols when subscribing to live feed')
         }
-        return {
+
+        const depth = this._suffixes['depth'] || 25
+
+        const subscription = {
           H: 'c3',
           M: 'Subscribe',
-          A: filter.symbols.map((symbol) => [`orderbook_${symbol.toUpperCase()}_25`]),
+          A: [filter.symbols.map((symbol) => `orderbook_${symbol.toUpperCase()}_${depth}`)],
           I: index + 1
         }
+        return subscription
       })
     return payload
   }
 
   protected messageIsError(message: BittrexMessageErrorType): boolean {
     if (message.R) {
-      for (let msg of message.R) {
+      for (const msg of message.R) {
         if (!msg.Success) {
           return true
         }
@@ -88,7 +92,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
       return
     }
     this.debug('requesting manual snapshots for: %s', depthSnapshotFilter.symbols)
-    for (let symbol of depthSnapshotFilter.symbols!) {
+    for (const symbol of depthSnapshotFilter.symbols!) {
       if (shouldCancel()) {
         return
       }
