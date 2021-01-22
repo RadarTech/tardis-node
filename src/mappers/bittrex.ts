@@ -26,7 +26,7 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
     const data: BittrexOrderChange = decodeMessage(message)
     const bookChange: BookChange = {
       type: 'book_change',
-      symbol: 'ETH',
+      symbol: data.marketSymbol,
       exchange: this.exchange,
       isSnapshot: false,
       bids: data.bidDeltas.map(mapBookLevel),
@@ -34,7 +34,6 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
       timestamp: localTimestamp,
       localTimestamp
     }
-    console.log(bookChange)
     yield bookChange
   }
 }

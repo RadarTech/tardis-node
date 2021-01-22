@@ -10,7 +10,7 @@ async function run() {
   )
 
   for await (const message of messages) {
-    console.log(message)
+    console.log("New message: ", message)
   }
 }
 
