@@ -46,8 +46,8 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         }
         return {
           H: 'c3',
-          M: 'subscribe',
-          A: filter.symbols.map((_) => ['heartbeat', `oderbook_BTC-USD_25`, `orderBook`]),
+          M: 'Subscribe',
+          A: filter.symbols.map((symbol) => [`orderbook_${symbol.toUpperCase()}_25`]),
           I: index + 1
         }
       })
