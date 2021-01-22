@@ -74,13 +74,11 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
         }) as AsyncIterableIterator<Buffer>
 
         for await (let message of realtimeMessagesStream) {
-          console.log(message)
           if (this.decompress !== undefined) {
             message = this.decompress(message)
           }
 
           const messageDeserialized = JSON.parse(message as any)
-
           if (this.messageIsError(messageDeserialized)) {
             throw new Error(`Received error message:${message.toString()}`)
           }
@@ -177,7 +175,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
     if (this._ws.readyState !== WebSocket.OPEN) {
       return
     }
-    console.log("send -> ", JSON.stringify(msg))
     this._ws.send(JSON.stringify(msg))
   }
 

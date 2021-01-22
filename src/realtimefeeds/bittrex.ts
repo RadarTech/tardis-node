@@ -73,7 +73,6 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         const negotiations: { ConnectionToken: string } = await got
           .get(`https://socket-v3.bittrex.com/signalr/negotiate?connectionData=${data}&clientProtocol=1.5`)
           .json()
-        console.log(negotiations)
         const token = encodeURIComponent(negotiations.ConnectionToken)
         wssPath = `${this.wssURL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${data}&tid=10`
       } catch (error) {
