@@ -9,7 +9,7 @@ abstract class BittrexRealTimeFeedBase extends MultiConnectionRealTimeFeedBase {
   protected abstract suffixes: { [key: string]: number }
 
   protected *_getRealTimeFeeds(exchange: string, filters: Filter<string>[], timeoutIntervalMS?: number, onError?: (error: Error) => void) {
-    const wsFilters = filters.filter((f) => f.channel !== 'recentTrades')
+    const wsFilters = filters.filter((f) => f.channel !== 'depthSnapshot')
     if (wsFilters.length > 0) {
       yield new BittrexSingleConnectionRealTimeFeed(
         exchange,
