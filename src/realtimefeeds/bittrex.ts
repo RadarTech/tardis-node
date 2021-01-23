@@ -123,6 +123,6 @@ export class BittrexRealTimeFeed extends BittrexRealTimeFeedBase {
   }
 }
 
-type BittrexMessageErrorType = { R: BittrexResponseStatusType[]; I: '1' }
+type BittrexMessageErrorType = { R: BittrexResponseStatusType[] }
 
 type BittrexResponseStatusType = { Success: boolean; ErrorCode: string }
