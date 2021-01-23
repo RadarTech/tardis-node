@@ -102,8 +102,8 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         .json()
 
       const snapshot = {
-        stream: `${symbol.toLocaleLowerCase()}@depthSnapshot`,
-        generated: true,
+        stream: 'depthSnapshot',
+        symbol: symbol,
         timestamp: new Date(),
         data: orderBookResponse
       }
