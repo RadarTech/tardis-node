@@ -1,5 +1,5 @@
 import { inflateRawSync } from 'zlib'
-import { BookChange, Exchange } from '../types'
+import { BookChange, Exchange, Trade } from '../types'
 import { Mapper } from './mapper'
 
 export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
@@ -38,7 +38,7 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
         localTimestamp
       }
     } else {
-      const data: BittrexOrderChange = decodeMessage(message)
+      const data: BittrexOrderChange = fetchAndParseMessage(message)
       bookChange = {
         type: 'book_change',
         symbol: data.marketSymbol,
@@ -54,13 +54,49 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
   }
 }
 
+export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
+  constructor(private readonly _exchange: Exchange) {}
+
+  canHandle(message: any) {
+    console.log(message)
+    return false
+  }
+
+  getFilters(symbols?: string[]) {
+    return [
+      {
+        channel: 'trade',
+        symbols
+      } as const
+    ]
+  }
+
+  *map(message: any, localTimestamp: Date) {
+    const data = message.data
+    console.log(data)
+    const trade: Trade = {
+      type: 'trade',
+      symbol: data.s,
+      exchange: this._exchange,
+      id: String(data.t),
+      price: Number(data.p),
+      amount: Number(data.q),
+      side: data.m ? 'sell' : 'buy',
+      timestamp: new Date(data.T),
+      localTimestamp: localTimestamp
+    }
+
+    yield trade
+  }
+}
+
 function mapBookLevel(level: BittrexBookLevel) {
   const amount = Number(level.quantity)
   const price = Number(level.rate)
   return { price, amount }
 }
 
-function decodeMessage(message: BittrexMessageType) {
+function fetchAndParseMessage(message: BittrexMessageType) {
   return JSON.parse(inflateRawSync(Buffer.from(message.M.flatMap((m) => m.A[0])[0], 'base64')).toString())
 }
 

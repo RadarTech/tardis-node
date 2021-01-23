@@ -45,12 +45,11 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
           throw new Error('BittrexRealTimeFeed requires explicitly specified symbols when subscribing to live feed')
         }
 
-        const depth = this._suffixes['depth'] || 25
-
+        const suffix = filter.channel === 'orderBook' ? `_${this._suffixes['depth'] || 25}` : ''
         const subscription = {
           H: 'c3',
           M: 'Subscribe',
-          A: [filter.symbols.map((symbol) => `orderbook_${symbol.toUpperCase()}_${depth}`)],
+          A: [filter.symbols.map((symbol) => `${filter.channel}_${symbol.toUpperCase()}${suffix}`)],
           I: index + 1
         }
         return subscription
@@ -97,8 +96,11 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         return
       }
 
+      const queryParameters = depthSnapshotFilter.channel === 'orderBook' ? `orderbook?depth=${this._suffixes['depth'] || 25}` : 'trades'
       const orderBookResponse = await got
-        .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/orderbook?depth=25`, { timeout: 2000 })
+        .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/${queryParameters}`, {
+          timeout: 2000
+        })
         .json()
 
       const snapshot = {
@@ -119,7 +121,7 @@ export class BittrexRealTimeFeed extends BittrexRealTimeFeedBase {
   protected httpURL = 'https://api.bittrex.com/v3'
 
   protected suffixes = {
-    depth: 500
+    depth: 25
   }
 }
 

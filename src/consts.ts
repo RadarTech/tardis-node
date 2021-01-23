@@ -41,7 +41,7 @@ const BINANCE_CHANNELS = ['trade', 'aggTrade', 'ticker', 'depth', 'depthSnapshot
 const BINANCE_DEX_CHANNELS = ['trades', 'marketDiff', 'depthSnapshot'] as const
 const BITFINEX_CHANNELS = ['trades', 'book', 'raw_book'] as const
 
-const BITTREX_CHANNELS = ['orderBook', 'depthSnapshot'] as const
+const BITTREX_CHANNELS = ['trade', 'orderBook', 'depthSnapshot'] as const
 
 const BITMEX_CHANNELS = [
   'trade',
