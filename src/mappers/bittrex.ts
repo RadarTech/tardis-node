@@ -57,9 +57,8 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
 export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
   constructor(private readonly _exchange: Exchange) {}
 
-  canHandle(message: any) {
-    console.log(message)
-    return false
+  canHandle(message: BittrexMessageType) {
+    return Array.isArray(message.M) && message.M.length > 0
   }
 
   getFilters(symbols?: string[]) {
@@ -71,22 +70,23 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
     ]
   }
 
-  *map(message: any, localTimestamp: Date) {
-    const data = message.data
-    console.log(data)
-    const trade: Trade = {
-      type: 'trade',
-      symbol: data.s,
-      exchange: this._exchange,
-      id: String(data.t),
-      price: Number(data.p),
-      amount: Number(data.q),
-      side: data.m ? 'sell' : 'buy',
-      timestamp: new Date(data.T),
-      localTimestamp: localTimestamp
+  *map(message: any, localTimestamp: Date): IterableIterator<Trade> {
+    console.log(fetchAndParseMessage(message))
+    const bittrexTradeResponse: BittrexTradeResponse = fetchAndParseMessage(message)
+    for (const bittrexTrade of bittrexTradeResponse.deltas) {
+      yield {
+        type: 'trade',
+        symbol: bittrexTradeResponse.marketSymbol,
+        exchange: this._exchange,
+        id: bittrexTrade.id,
+        price: Number(bittrexTrade.rate),
+        amount: Number(bittrexTrade.quantity),
+        // @ts-ignore
+        side: bittrexTrade.takerSide !== undefined ? bittrexTrade.takerSide.toLowerCase() : 'unknown',
+        timestamp: new Date(bittrexTrade.executedAt),
+        localTimestamp: localTimestamp
+      }
     }
-
-    yield trade
   }
 }
 
@@ -97,9 +97,23 @@ function mapBookLevel(level: BittrexBookLevel) {
 }
 
 function fetchAndParseMessage(message: BittrexMessageType) {
-  return JSON.parse(inflateRawSync(Buffer.from(message.M.flatMap((m) => m.A[0])[0], 'base64')).toString())
+  const raw = inflateRawSync(Buffer.from(message.M.flatMap((m) => m.A[0])[0], 'base64')).toString()
+  return JSON.parse(raw)
 }
 
+type BittrexTradeResponse = {
+  deltas: BittrexTrade[]
+  sequence: number
+  marketSymbol: string
+}
+
+type BittrexTrade = {
+  id: string
+  executedAt: string
+  quantity: string
+  rate: string
+  takerSide: string
+}
 type BittrexMessageType = {
   M: { A: string[] }[]
   stream?: string

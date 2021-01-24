@@ -113,7 +113,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
         }
         yield undefined
       } catch (error) {
-        console.log(error)
         if (this._onError !== undefined) {
           this._onError(error)
         }
@@ -263,7 +262,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
 
       await this.provideManualSnapshots(this._filters, () => this._ws!.readyState === WebSocket.CLOSED)
     } catch (e) {
-      console.log(e)
       this.debug('(connection id: %d) providing manual snapshots error: %o', this._connectionId, e)
       this._ws!.emit('error', e)
     }

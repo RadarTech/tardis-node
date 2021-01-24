@@ -6,6 +6,7 @@ async function run() {
       exchange: 'bittrex',
       symbols: ['ETH-USD', 'ETH-BTC']
     },
+    normalizeTrades,
     normalizeBookChanges
   )
 

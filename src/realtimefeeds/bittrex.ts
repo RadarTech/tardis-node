@@ -96,7 +96,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         return
       }
 
-      const queryParameters = depthSnapshotFilter.channel === 'orderBook' ? `orderbook?depth=${this._suffixes['depth'] || 25}` : 'trades'
+      const queryParameters = `${depthSnapshotFilter.channel}?depth=${this._suffixes['depth'] || 25}`
       const orderBookResponse = await got
         .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/${queryParameters}`, {
           timeout: 2000
