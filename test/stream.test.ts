@@ -55,7 +55,8 @@ describe('stream', () => {
             exchange === 'binance-jersey' ||
             exchange === 'huobi-dm-linear-swap' ||
             exchange === 'okex-futures' ||
-            exchange === 'okex-options'
+            exchange === 'okex-options' ||
+            exchange === 'bittrex'
           ) {
             return
           }
