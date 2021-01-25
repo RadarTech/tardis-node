@@ -86,8 +86,7 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
         id: bittrexTrade.id,
         price: Number(bittrexTrade.rate),
         amount: Number(bittrexTrade.quantity),
-        // @ts-ignore
-        side: bittrexTrade.takerSide !== undefined ? bittrexTrade.takerSide.toLowerCase() : 'unknown',
+        side: bittrexTrade.takerSide === 'BUY' ? 'buy' : 'sell',
         timestamp: new Date(bittrexTrade.executedAt),
         localTimestamp: localTimestamp
       }

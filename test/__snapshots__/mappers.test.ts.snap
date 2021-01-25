@@ -1475,6 +1475,223 @@ Array [
 ]
 `;
 
+exports[`mappers map bittrex messages 8`] = `
+Array [
+  Object {
+    "asks": Array [
+      Object {
+        "amount": 2.28292793,
+        "price": 0.04129148,
+      },
+      Object {
+        "amount": 4,
+        "price": 0.04130661,
+      },
+      Object {
+        "amount": 5.507,
+        "price": 0.04130664,
+      },
+      Object {
+        "amount": 0.417,
+        "price": 0.04130993,
+      },
+      Object {
+        "amount": 11.56038205,
+        "price": 0.04131002,
+      },
+      Object {
+        "amount": 2,
+        "price": 0.04134401,
+      },
+      Object {
+        "amount": 1.0218398,
+        "price": 0.04134402,
+      },
+      Object {
+        "amount": 4.84183773,
+        "price": 0.04141614,
+      },
+      Object {
+        "amount": 9.088,
+        "price": 0.04141615,
+      },
+      Object {
+        "amount": 7.47228478,
+        "price": 0.04145975,
+      },
+      Object {
+        "amount": 22.382,
+        "price": 0.04145976,
+      },
+      Object {
+        "amount": 2.5,
+        "price": 0.04145977,
+      },
+      Object {
+        "amount": 0.43530243,
+        "price": 0.04150299,
+      },
+      Object {
+        "amount": 8.37,
+        "price": 0.0415103,
+      },
+      Object {
+        "amount": 13.86386643,
+        "price": 0.04151188,
+      },
+      Object {
+        "amount": 17.48345369,
+        "price": 0.04152148,
+      },
+      Object {
+        "amount": 0.48709206,
+        "price": 0.04152814,
+      },
+      Object {
+        "amount": 21.30762625,
+        "price": 0.04154664,
+      },
+      Object {
+        "amount": 0.13165136,
+        "price": 0.04154845,
+      },
+      Object {
+        "amount": 229.282,
+        "price": 0.04164804,
+      },
+      Object {
+        "amount": 2.81333422,
+        "price": 0.04170861,
+      },
+      Object {
+        "amount": 0.5,
+        "price": 0.04170862,
+      },
+      Object {
+        "amount": 20.39737558,
+        "price": 0.04172651,
+      },
+      Object {
+        "amount": 0.03179645,
+        "price": 0.04179986,
+      },
+      Object {
+        "amount": 0.02505239,
+        "price": 0.04182625,
+      },
+    ],
+    "bids": Array [
+      Object {
+        "amount": 0.417,
+        "price": 0.04128917,
+      },
+      Object {
+        "amount": 0.02664145,
+        "price": 0.04128903,
+      },
+      Object {
+        "amount": 2.91657796,
+        "price": 0.041289,
+      },
+      Object {
+        "amount": 2.7596647,
+        "price": 0.04128593,
+      },
+      Object {
+        "amount": 5.507,
+        "price": 0.04128592,
+      },
+      Object {
+        "amount": 3.63217241,
+        "price": 0.04127215,
+      },
+      Object {
+        "amount": 0.6979,
+        "price": 0.04127151,
+      },
+      Object {
+        "amount": 0.35583537,
+        "price": 0.04127031,
+      },
+      Object {
+        "amount": 3.63154242,
+        "price": 0.04126651,
+      },
+      Object {
+        "amount": 2.42129285,
+        "price": 0.04126559,
+      },
+      Object {
+        "amount": 2.28485512,
+        "price": 0.04121423,
+      },
+      Object {
+        "amount": 2.13743924,
+        "price": 0.04121421,
+      },
+      Object {
+        "amount": 2.13739784,
+        "price": 0.04120005,
+      },
+      Object {
+        "amount": 2.203,
+        "price": 0.04120004,
+      },
+      Object {
+        "amount": 0.05073058,
+        "price": 0.0412,
+      },
+      Object {
+        "amount": 0.5,
+        "price": 0.04119472,
+      },
+      Object {
+        "amount": 0.06908035,
+        "price": 0.04119,
+      },
+      Object {
+        "amount": 6.885,
+        "price": 0.04118926,
+      },
+      Object {
+        "amount": 0.03179645,
+        "price": 0.04118086,
+      },
+      Object {
+        "amount": 0.0218,
+        "price": 0.04117391,
+      },
+      Object {
+        "amount": 0.0138199,
+        "price": 0.04117,
+      },
+      Object {
+        "amount": 2.44486348,
+        "price": 0.04116323,
+      },
+      Object {
+        "amount": 22.382,
+        "price": 0.04116085,
+      },
+      Object {
+        "amount": 21.28885996,
+        "price": 0.04115836,
+      },
+      Object {
+        "amount": 0.07712956,
+        "price": 0.04115,
+      },
+    ],
+    "exchange": "bittrex",
+    "isSnapshot": true,
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "symbol": "ETH-BTC",
+    "timestamp": "2021-01-25T13:23:49.531Z",
+    "type": "book_change",
+  },
+]
+`;
+
 exports[`mappers map bybit messages 1`] = `Array []`;
 
 exports[`mappers map bybit messages 2`] = `
