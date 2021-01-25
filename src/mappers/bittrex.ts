@@ -76,7 +76,7 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
     ]
   }
 
-  *map(message: any, localTimestamp: Date): IterableIterator<Trade> {
+  *map(message: BittrexMessageType, localTimestamp: Date): IterableIterator<Trade> {
     const bittrexTradeResponse: BittrexTradeResponse = fetchAndParseMessage(message)
     for (const bittrexTrade of bittrexTradeResponse.deltas) {
       const trade: Trade = {

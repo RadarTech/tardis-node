@@ -41,7 +41,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
     const payload = filters
       .filter((f) => f.channel !== 'depthSnapshot')
       .map((filter, index) => {
-        if (!filter.symbols || filter.symbols.length === 0) {
+        if (!filter.symbols?.length) {
           throw new Error('BittrexRealTimeFeed requires explicitly specified symbols when subscribing to live feed')
         }
 
