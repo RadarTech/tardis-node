@@ -4,7 +4,6 @@ import {
   computeBookSnapshots,
   computeTradeBars,
   normalizeBookChanges,
-  NormalizedData,
   normalizeTrades,
   replayNormalized,
   Trade
