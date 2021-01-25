@@ -6,7 +6,7 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
   constructor(protected readonly exchange: Exchange) {}
 
   canHandle(message: BittrexMessageType) {
-    return (Array.isArray(message.M) && message.M.length > 0) || message.stream === 'depthSnapshot'
+    return (Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'orderBook') || message.stream === 'depthSnapshot'
   }
 
   getFilters(symbols?: string[]) {
@@ -55,10 +55,10 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
 }
 
 export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
-  constructor(private readonly _exchange: Exchange) {}
+  constructor(private readonly exchange: Exchange) {}
 
   canHandle(message: BittrexMessageType) {
-    return Array.isArray(message.M) && message.M.length > 0
+    return Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'trade'
   }
 
   getFilters(symbols?: string[]) {
@@ -71,13 +71,12 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
   }
 
   *map(message: any, localTimestamp: Date): IterableIterator<Trade> {
-    console.log(fetchAndParseMessage(message))
     const bittrexTradeResponse: BittrexTradeResponse = fetchAndParseMessage(message)
     for (const bittrexTrade of bittrexTradeResponse.deltas) {
-      yield {
+      const trade: Trade = {
         type: 'trade',
         symbol: bittrexTradeResponse.marketSymbol,
-        exchange: this._exchange,
+        exchange: this.exchange,
         id: bittrexTrade.id,
         price: Number(bittrexTrade.rate),
         amount: Number(bittrexTrade.quantity),
@@ -86,6 +85,7 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
         timestamp: new Date(bittrexTrade.executedAt),
         localTimestamp: localTimestamp
       }
+      yield trade
     }
   }
 }
@@ -115,7 +115,8 @@ type BittrexTrade = {
   takerSide: string
 }
 type BittrexMessageType = {
-  M: { A: string[] }[]
+  G: string
+  M: { A: string[]; M: string }[]
   stream?: string
   data?: BittrexDataSnapshotType
   symbol?: string
