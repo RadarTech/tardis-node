@@ -26,7 +26,7 @@ describe('compute(messages, types)', () => {
         ...normalizers
       )
 
-      const bufferedMessages: NormalizedData[] = []
+      const bufferedMessages = []
       const withComputedTypes = compute(
         bitmexMessages,
         computeBookSnapshots({ depth: 10, interval: 1000 }),

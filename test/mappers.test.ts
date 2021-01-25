@@ -1790,7 +1790,7 @@ describe('mappers', () => {
     }
   })
 
-  test.only('map bittrex messages', () => {
+  test('map bittrex messages', () => {
     const messages = [
       // empty array in trade operation
       {
