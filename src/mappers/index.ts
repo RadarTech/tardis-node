@@ -12,6 +12,7 @@ import { BitfinexBookChangeMapper, BitfinexDerivativeTickerMapper, BitfinexLiqui
 import { BitflyerBookChangeMapper, bitflyerTradesMapper } from './bitflyer'
 import { BitmexBookChangeMapper, BitmexDerivativeTickerMapper, bitmexLiquidationsMapper, bitmexTradesMapper } from './bitmex'
 import { BitstampBookChangeMapper, bitstampTradesMapper } from './bitstamp'
+import { BittrexOrderChangeMapper, BittrexTradesMapper } from './bittrex'
 import { BybitBookChangeMapper, BybitDerivativeTickerMapper, BybitLiquidationsMapper, BybitTradesMapper } from './bybit'
 import { CoinbaseBookChangMapper, coinbaseTradesMapper } from './coinbase'
 import { coinflexBookChangeMapper, CoinflexDerivativeTickerMapper, coinflexTradesMapper } from './coinflex'
@@ -70,6 +71,7 @@ const tradesMappers = {
   'bitfinex-derivatives': () => new BitfinexTradesMapper('bitfinex-derivatives'),
   bitflyer: () => bitflyerTradesMapper,
   bitstamp: () => bitstampTradesMapper,
+  bittrex: () => new BittrexTradesMapper('bittrex'),
   coinbase: () => coinbaseTradesMapper,
   cryptofacilities: () => cryptofacilitiesTradesMapper,
   deribit: () => deribitTradesMapper,
@@ -105,6 +107,7 @@ const bookChangeMappers = {
   'binance-delivery': (localTimestamp: Date) =>
     new BinanceFuturesBookChangeMapper('binance-delivery', isRealTime(localTimestamp) === false),
   'binance-dex': () => binanceDexBookChangeMapper,
+  bittrex: () => new BittrexOrderChangeMapper('bittrex'),
   bitfinex: () => new BitfinexBookChangeMapper('bitfinex'),
   'bitfinex-derivatives': () => new BitfinexBookChangeMapper('bitfinex-derivatives'),
   bitflyer: () => new BitflyerBookChangeMapper(),

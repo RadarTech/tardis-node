@@ -1790,6 +1790,166 @@ describe('mappers', () => {
     }
   })
 
+  test('map bittrex messages', () => {
+    const messages = [
+      // empty array in trade operation
+      {
+        C: 'd-43793CA3-C,0|aDDO,0|aDDP,3|Np,1AB9|Ju,12A7',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: []
+          }
+        ]
+      },
+      // one trade
+      {
+        C: 'd-43793CA3-C,0|aDDO,0|aDDP,3|Np,1AB9|Ju,12A8',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: [
+              'HYy7CoNAFET/5dau7FOzdkkQUthplZBide+C+AjqChHx37OmmeLMmdnBYu/NAtlrh9ZCBlZq7RLBSO1qSyQzKblclAthG0q1qLmTEAF+sVk92qsPG045I5QRrirGMy4zqWPFnkGbVjP61m9BorHQQqQiTQKfjcc/o5IrpdLz0psO57K1Z1HmRQHHO4IFpxXHJrAwTiIYzNyhL7eh/vTBy6sHuVV3OH4='
+            ]
+          }
+        ]
+      },
+      // more than one trade
+      {
+        C: 'd-A75AFB3-B,0|arcy,0|arcz,3|Go,1B77|B3,1321',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: [
+              'nY49a8MwEIb/y82+cDrJiuQtLYEO2eyppYM+zmDyUeLI0BDy36uUjpl643PPC88NshxKuED3cYMpQwfWj5zJr1HHZNCQOHTWWoxh5FEz5TFlaEC+JS1F8qbUDRMrJIXcDoo74ztFK/bvVTsv4VSmcq0SrbT39LjK51Dkl5FhRY65shL2MvdTfjz67W4H9+avSWuTbLQKndNrNEYCep9aHJNetxIl+Gj/2URsnzdp1k+bPhu4yHmRU6rMt+waOIZ5L6W/HuPXoXrb4Q1fhle4/wA='
+            ]
+          }
+        ]
+      },
+      // empty array in order book operation
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58413',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: []
+          }
+        ]
+      },
+      // book_change event only with bids
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58414',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'Vc29CoMwGIXhezlzGmITNWa20N12Kg6xflDxr5o4iHjvTaEUPPP7cDb0dm7JF2tfjR0MLrfr6V7kYKjp7V8w55jB0bTQ8CSYOEpkphmqps6p89bBPDZMix1849fgRZCz9SFFpGTCM5WK77CzY8dFnMhUqwOINM+0/IGSwbr2f1PuHw=='
+            ]
+          }
+        ]
+      },
+      // book_change event only with asks
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58415',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'q1bKTSzKTi0JrsxNys9RslJyDfHQDQ12UdJRSkktKMlQsjIy1VEqTi0sTc1LTlWyMjU0M7a01FFKykxxSc0pSSxWsoqO1VFKLM6Gc6uVCksT80oySyqBxhnpGZpZGoAA0MSixBKgEUqGJiZGehYmxhDh2thaAA=='
+            ]
+          }
+        ]
+      },
+      // book_change event with multiple asks and bids
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58416',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'hY7LDoIwEEX/Zda16WN4tGtM3KMrw6JIEwkPBcqCEP7dEo2RhMRZ3jln5s7QmL6yLp2a/FGDhuP5dLikCRAo7NPdQYuAwGC70bY3CzrgITJGIC+LxNbODKCvM3SjaV3pJu/zgCIK5iHlb/TG2TVEGdHIx+vAQrYGFcjem62ADHeFDcdjqmL54TICZqj2izGqpAxZGIlfHTlVSv1/g4LG3/7Z8gI='
+            ]
+          }
+        ]
+      },
+      // order book manual snapshot
+      {
+        stream: 'depthSnapshot',
+        symbol: 'ETH-BTC',
+        timestamp: '2021-01-25T13:23:49.531Z',
+        data: {
+          bid: [
+            { quantity: '0.41700000', rate: '0.04128917' },
+            { quantity: '0.02664145', rate: '0.04128903' },
+            { quantity: '2.91657796', rate: '0.04128900' },
+            { quantity: '2.75966470', rate: '0.04128593' },
+            { quantity: '5.50700000', rate: '0.04128592' },
+            { quantity: '3.63217241', rate: '0.04127215' },
+            { quantity: '0.69790000', rate: '0.04127151' },
+            { quantity: '0.35583537', rate: '0.04127031' },
+            { quantity: '3.63154242', rate: '0.04126651' },
+            { quantity: '2.42129285', rate: '0.04126559' },
+            { quantity: '2.28485512', rate: '0.04121423' },
+            { quantity: '2.13743924', rate: '0.04121421' },
+            { quantity: '2.13739784', rate: '0.04120005' },
+            { quantity: '2.20300000', rate: '0.04120004' },
+            { quantity: '0.05073058', rate: '0.04120000' },
+            { quantity: '0.50000000', rate: '0.04119472' },
+            { quantity: '0.06908035', rate: '0.04119000' },
+            { quantity: '6.88500000', rate: '0.04118926' },
+            { quantity: '0.03179645', rate: '0.04118086' },
+            { quantity: '0.02180000', rate: '0.04117391' },
+            { quantity: '0.01381990', rate: '0.04117000' },
+            { quantity: '2.44486348', rate: '0.04116323' },
+            { quantity: '22.38200000', rate: '0.04116085' },
+            { quantity: '21.28885996', rate: '0.04115836' },
+            { quantity: '0.07712956', rate: '0.04115000' }
+          ],
+          ask: [
+            { quantity: '2.28292793', rate: '0.04129148' },
+            { quantity: '4.00000000', rate: '0.04130661' },
+            { quantity: '5.50700000', rate: '0.04130664' },
+            { quantity: '0.41700000', rate: '0.04130993' },
+            { quantity: '11.56038205', rate: '0.04131002' },
+            { quantity: '2.00000000', rate: '0.04134401' },
+            { quantity: '1.02183980', rate: '0.04134402' },
+            { quantity: '4.84183773', rate: '0.04141614' },
+            { quantity: '9.08800000', rate: '0.04141615' },
+            { quantity: '7.47228478', rate: '0.04145975' },
+            { quantity: '22.38200000', rate: '0.04145976' },
+            { quantity: '2.50000000', rate: '0.04145977' },
+            { quantity: '0.43530243', rate: '0.04150299' },
+            { quantity: '8.37000000', rate: '0.04151030' },
+            { quantity: '13.86386643', rate: '0.04151188' },
+            { quantity: '17.48345369', rate: '0.04152148' },
+            { quantity: '0.48709206', rate: '0.04152814' },
+            { quantity: '21.30762625', rate: '0.04154664' },
+            { quantity: '0.13165136', rate: '0.04154845' },
+            { quantity: '229.28200000', rate: '0.04164804' },
+            { quantity: '2.81333422', rate: '0.04170861' },
+            { quantity: '0.50000000', rate: '0.04170862' },
+            { quantity: '20.39737558', rate: '0.04172651' },
+            { quantity: '0.03179645', rate: '0.04179986' },
+            { quantity: '0.02505239', rate: '0.04182625' }
+          ]
+        }
+      }
+    ]
+
+    const bittrexMapper = createMapper('bittrex', new Date())
+    for (const message of messages) {
+      const mappedMessages = bittrexMapper.map(message, new Date('2019-09-01T00:00:01.2750543Z'))
+      expect(mappedMessages).toMatchSnapshot()
+    }
+  })
+
   test('map binance dex messages', () => {
     const messages = [
       {

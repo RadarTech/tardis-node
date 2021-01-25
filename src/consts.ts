@@ -4,6 +4,7 @@ export const EXCHANGES = [
   'binance-futures',
   'binance-delivery',
   'binance',
+  'bittrex',
   'ftx',
   'okex-futures',
   'okex-options',
@@ -39,6 +40,8 @@ export const EXCHANGES = [
 const BINANCE_CHANNELS = ['trade', 'aggTrade', 'ticker', 'depth', 'depthSnapshot', 'bookTicker', 'recentTrades'] as const
 const BINANCE_DEX_CHANNELS = ['trades', 'marketDiff', 'depthSnapshot'] as const
 const BITFINEX_CHANNELS = ['trades', 'book', 'raw_book'] as const
+
+const BITTREX_CHANNELS = ['trade', 'orderBook', 'depthSnapshot'] as const
 
 const BITMEX_CHANNELS = [
   'trade',
@@ -239,6 +242,7 @@ export const EXCHANGE_CHANNELS_INFO = {
   deribit: DERIBIT_CHANNELS,
   cryptofacilities: CRYPTOFACILITIES_CHANNELS,
   bitstamp: BITSTAMP_CHANNELS,
+  bittrex: BITTREX_CHANNELS,
   kraken: KRAKEN_CHANNELS,
   okex: OKEX_CHANNELS,
   'okex-swap': OKEX_SWAP_CHANNELS,

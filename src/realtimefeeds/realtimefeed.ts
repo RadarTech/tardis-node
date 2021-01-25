@@ -35,7 +35,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
   constructor(
     protected readonly _exchange: string,
     filters: Filter<string>[],
-    private readonly _timeoutIntervalMS: number | undefined,
+    protected readonly _timeoutIntervalMS: number | undefined,
     private readonly _onError?: (error: Error) => void
   ) {
     this._filters = optimizeFilters(filters)
@@ -60,7 +60,7 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
           subscribeMessages
         )
 
-        this._ws = new WebSocket(this.wssURL, { perMessageDeflate: false, handshakeTimeout: 10 * ONE_SEC_IN_MS })
+        this._ws = new WebSocket(await this.getWssPath(), { perMessageDeflate: false, handshakeTimeout: 10 * ONE_SEC_IN_MS })
 
         this._ws.onopen = this._onConnectionEstabilished
         this._ws.onclose = this._onConnectionClosed
@@ -79,7 +79,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
           }
 
           const messageDeserialized = JSON.parse(message as any)
-
           if (this.messageIsError(messageDeserialized)) {
             throw new Error(`Received error message:${message.toString()}`)
           }
@@ -164,6 +163,9 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
       }
     }
   }
+  protected async getWssPath(): Promise<string> {
+    return this.wssURL
+  }
 
   protected send(msg: any) {
     if (this._ws === undefined) {
@@ -227,7 +229,6 @@ export abstract class RealTimeFeedBase implements RealTimeFeedIterable {
   private _onConnectionEstabilished = async () => {
     try {
       const subscribeMessages = this.mapToSubscribeMessages(this._filters)
-
       let symbolsCount = this._filters.reduce((prev, curr) => {
         if (curr.symbols !== undefined) {
           for (const symbol of curr.symbols) {
@@ -275,7 +276,7 @@ export abstract class MultiConnectionRealTimeFeedBase implements RealTimeFeedIte
   constructor(
     private readonly _exchange: string,
     private readonly _filters: Filter<string>[],
-    private readonly _timeoutIntervalMS: number | undefined,
+    protected readonly _timeoutIntervalMS: number | undefined,
     private readonly _onError?: (error: Error) => void
   ) {}
 
