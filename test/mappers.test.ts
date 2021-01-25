@@ -1790,6 +1790,93 @@ describe('mappers', () => {
     }
   })
 
+  test.only('map bittrex messages', () => {
+    const messages = [
+      // empty array
+      {
+        C: 'd-43793CA3-C,0|aDDO,0|aDDP,3|Np,1AB9|Ju,12A7',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: []
+          }
+        ]
+      },
+      // one trade
+      {
+        C: 'd-43793CA3-C,0|aDDO,0|aDDP,3|Np,1AB9|Ju,12A8',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: [
+              'HYy7CoNAFET/5dau7FOzdkkQUthplZBide+C+AjqChHx37OmmeLMmdnBYu/NAtlrh9ZCBlZq7RLBSO1qSyQzKblclAthG0q1qLmTEAF+sVk92qsPG045I5QRrirGMy4zqWPFnkGbVjP61m9BorHQQqQiTQKfjcc/o5IrpdLz0psO57K1Z1HmRQHHO4IFpxXHJrAwTiIYzNyhL7eh/vTBy6sHuVV3OH4='
+            ]
+          }
+        ]
+      },
+      // more than one trade
+      {
+        C: 'd-A75AFB3-B,0|arcy,0|arcz,3|Go,1B77|B3,1321',
+        M: [
+          {
+            H: 'C3',
+            M: 'trade',
+            A: [
+              'nY49a8MwEIb/y82+cDrJiuQtLYEO2eyppYM+zmDyUeLI0BDy36uUjpl643PPC88NshxKuED3cYMpQwfWj5zJr1HHZNCQOHTWWoxh5FEz5TFlaEC+JS1F8qbUDRMrJIXcDoo74ztFK/bvVTsv4VSmcq0SrbT39LjK51Dkl5FhRY65shL2MvdTfjz67W4H9+avSWuTbLQKndNrNEYCep9aHJNetxIl+Gj/2URsnzdp1k+bPhu4yHmRU6rMt+waOIZ5L6W/HuPXoXrb4Q1fhle4/wA='
+            ]
+          }
+        ]
+      },
+      // book_change event only with bids
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58414',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'Vc29CoMwGIXhezlzGmITNWa20N12Kg6xflDxr5o4iHjvTaEUPPP7cDb0dm7JF2tfjR0MLrfr6V7kYKjp7V8w55jB0bTQ8CSYOEpkphmqps6p89bBPDZMix1849fgRZCz9SFFpGTCM5WK77CzY8dFnMhUqwOINM+0/IGSwbr2f1PuHw=='
+            ]
+          }
+        ]
+      },
+      // book_change event only with asks
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58415',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'q1bKTSzKTi0JrsxNys9RslJyDfHQDQ12UdJRSkktKMlQsjIy1VEqTi0sTc1LTlWyMjU0M7a01FFKykxxSc0pSSxWsoqO1VFKLM6Gc6uVCksT80oySyqBxhnpGZpZGoAA0MSixBKgEUqGJiZGehYmxhDh2thaAA=='
+            ]
+          }
+        ]
+      },
+      // book_change event with multiple asks and bids
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58416',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: [
+              'hY7LDoIwEEX/Zda16WN4tGtM3KMrw6JIEwkPBcqCEP7dEo2RhMRZ3jln5s7QmL6yLp2a/FGDhuP5dLikCRAo7NPdQYuAwGC70bY3CzrgITJGIC+LxNbODKCvM3SjaV3pJu/zgCIK5iHlb/TG2TVEGdHIx+vAQrYGFcjem62ADHeFDcdjqmL54TICZqj2izGqpAxZGIlfHTlVSv1/g4LG3/7Z8gI='
+            ]
+          }
+        ]
+      }
+    ]
+
+    const bittrexMapper = createMapper('bittrex', new Date())
+    for (const message of messages) {
+      const mappedMessages = bittrexMapper.map(message, new Date('2019-09-01T00:00:01.2750543Z'))
+      expect(mappedMessages).toMatchSnapshot()
+    }
+  })
+
   test('map binance dex messages', () => {
     const messages = [
       {

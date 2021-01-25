@@ -1347,6 +1347,132 @@ Array [
 ]
 `;
 
+exports[`mappers map bittrex messages 1`] = `Array []`;
+
+exports[`mappers map bittrex messages 2`] = `
+Array [
+  Object {
+    "amount": 0.39337376,
+    "exchange": "bittrex",
+    "id": "d499f631-bfbd-41a7-885f-88dc0093b2f4",
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "price": 0.04255574,
+    "side": "sell",
+    "symbol": "ETH-BTC",
+    "timestamp": 2021-01-25T12:24:49.510Z,
+    "type": "trade",
+  },
+]
+`;
+
+exports[`mappers map bittrex messages 3`] = `
+Array [
+  Object {
+    "amount": 0.399,
+    "exchange": "bittrex",
+    "id": "69f2d097-3bc4-40e8-8666-baf2f320dfcd",
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "price": 0.04210822,
+    "side": "sell",
+    "symbol": "ETH-BTC",
+    "timestamp": 2021-01-25T12:49:10.290Z,
+    "type": "trade",
+  },
+  Object {
+    "amount": 0.026,
+    "exchange": "bittrex",
+    "id": "334c6b61-8837-44ea-99c5-fc375ebea9b6",
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "price": 0.04210323,
+    "side": "sell",
+    "symbol": "ETH-BTC",
+    "timestamp": 2021-01-25T12:49:10.290Z,
+    "type": "trade",
+  },
+]
+`;
+
+exports[`mappers map bittrex messages 4`] = `
+Array [
+  Object {
+    "asks": Array [],
+    "bids": Array [
+      Object {
+        "amount": 0,
+        "price": 1436.947,
+      },
+      Object {
+        "amount": 0.0563784,
+        "price": 1418.983,
+      },
+    ],
+    "exchange": "bittrex",
+    "isSnapshot": false,
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "symbol": "ETH-USD",
+    "timestamp": 2019-09-01T00:00:01.275Z,
+    "type": "book_change",
+  },
+]
+`;
+
+exports[`mappers map bittrex messages 5`] = `
+Array [
+  Object {
+    "asks": Array [
+      Object {
+        "amount": 2.169,
+        "price": 1442.843,
+      },
+    ],
+    "bids": Array [],
+    "exchange": "bittrex",
+    "isSnapshot": false,
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "symbol": "ETH-USD",
+    "timestamp": 2019-09-01T00:00:01.275Z,
+    "type": "book_change",
+  },
+]
+`;
+
+exports[`mappers map bittrex messages 6`] = `
+Array [
+  Object {
+    "asks": Array [
+      Object {
+        "amount": 0.93360672,
+        "price": 1441.999,
+      },
+      Object {
+        "amount": 0,
+        "price": 1442.842,
+      },
+    ],
+    "bids": Array [
+      Object {
+        "amount": 15.44204009,
+        "price": 1437.742,
+      },
+      Object {
+        "amount": 1.24,
+        "price": 1437.404,
+      },
+      Object {
+        "amount": 0,
+        "price": 1418.983,
+      },
+    ],
+    "exchange": "bittrex",
+    "isSnapshot": false,
+    "localTimestamp": 2019-09-01T00:00:01.275Z,
+    "symbol": "ETH-USD",
+    "timestamp": 2019-09-01T00:00:01.275Z,
+    "type": "book_change",
+  },
+]
+`;
+
 exports[`mappers map bybit messages 1`] = `Array []`;
 
 exports[`mappers map bybit messages 2`] = `
