@@ -6,7 +6,7 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
   constructor(protected readonly exchange: Exchange) {}
 
   canHandle(message: BittrexMessageType) {
-    return (Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'orderBook') || message.stream === 'depthSnapshot'
+    return isValid(message, 'orderBook') || message.stream === 'depthSnapshot'
   }
 
   getFilters(symbols?: string[]) {
@@ -32,8 +32,8 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
         symbol: message.symbol!,
         exchange: this.exchange,
         isSnapshot: true,
-        bids: data.bid.map(mapBookLevel),
-        asks: data.ask.map(mapBookLevel),
+        bids: data.bid.map(this.mapBookLevel),
+        asks: data.ask.map(this.mapBookLevel),
         timestamp: message.timestamp!,
         localTimestamp
       }
@@ -44,13 +44,19 @@ export class BittrexOrderChangeMapper implements Mapper<'bittrex', BookChange> {
         symbol: data.marketSymbol,
         exchange: this.exchange,
         isSnapshot: false,
-        bids: data.bidDeltas.map(mapBookLevel),
-        asks: data.askDeltas.map(mapBookLevel),
+        bids: data.bidDeltas.map(this.mapBookLevel),
+        asks: data.askDeltas.map(this.mapBookLevel),
         timestamp: localTimestamp,
         localTimestamp
       }
     }
     yield bookChange
+  }
+
+  private mapBookLevel(level: BittrexBookLevel) {
+    const amount = Number(level.quantity)
+    const price = Number(level.rate)
+    return { price, amount }
   }
 }
 
@@ -58,7 +64,7 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
   constructor(private readonly exchange: Exchange) {}
 
   canHandle(message: BittrexMessageType) {
-    return Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'trade' && message.M[0].A.length > 0
+    return isValid(message, 'trade')
   }
 
   getFilters(symbols?: string[]) {
@@ -90,15 +96,19 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
   }
 }
 
-function mapBookLevel(level: BittrexBookLevel) {
-  const amount = Number(level.quantity)
-  const price = Number(level.rate)
-  return { price, amount }
-}
-
 function fetchAndParseMessage(message: BittrexMessageType) {
   const raw = inflateRawSync(Buffer.from(message.M.flatMap((m) => m.A[0])[0], 'base64')).toString()
   return JSON.parse(raw)
+}
+
+function isValid(message: BittrexMessageType, type: string): boolean {
+  return (
+    Array.isArray(message.M) &&
+    message.M.length > 0 &&
+    message.M[0].M === type &&
+    Array.isArray(message.M[0].A) &&
+    message.M[0].A.length > 0
+  )
 }
 
 type BittrexTradeResponse = {

@@ -1392,7 +1392,9 @@ Array [
 ]
 `;
 
-exports[`mappers map bittrex messages 4`] = `
+exports[`mappers map bittrex messages 4`] = `Array []`;
+
+exports[`mappers map bittrex messages 5`] = `
 Array [
   Object {
     "asks": Array [],
@@ -1416,7 +1418,7 @@ Array [
 ]
 `;
 
-exports[`mappers map bittrex messages 5`] = `
+exports[`mappers map bittrex messages 6`] = `
 Array [
   Object {
     "asks": Array [
@@ -1436,7 +1438,7 @@ Array [
 ]
 `;
 
-exports[`mappers map bittrex messages 6`] = `
+exports[`mappers map bittrex messages 7`] = `
 Array [
   Object {
     "asks": Array [

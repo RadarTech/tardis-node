@@ -1792,7 +1792,7 @@ describe('mappers', () => {
 
   test.only('map bittrex messages', () => {
     const messages = [
-      // empty array
+      // empty array in trade operation
       {
         C: 'd-43793CA3-C,0|aDDO,0|aDDP,3|Np,1AB9|Ju,12A7',
         M: [
@@ -1826,6 +1826,17 @@ describe('mappers', () => {
             A: [
               'nY49a8MwEIb/y82+cDrJiuQtLYEO2eyppYM+zmDyUeLI0BDy36uUjpl643PPC88NshxKuED3cYMpQwfWj5zJr1HHZNCQOHTWWoxh5FEz5TFlaEC+JS1F8qbUDRMrJIXcDoo74ztFK/bvVTsv4VSmcq0SrbT39LjK51Dkl5FhRY65shL2MvdTfjz67W4H9+avSWuTbLQKndNrNEYCep9aHJNetxIl+Gj/2URsnzdp1k+bPhu4yHmRU6rMt+waOIZ5L6W/HuPXoXrb4Q1fhle4/wA='
             ]
+          }
+        ]
+      },
+      // empty array in order book operation
+      {
+        C: 'd-12F30561-B,0|anj6,0|anj7,3|BNr,68C63|Fgh,58413',
+        M: [
+          {
+            H: 'C3',
+            M: 'orderBook',
+            A: []
           }
         ]
       },
