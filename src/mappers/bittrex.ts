@@ -58,7 +58,7 @@ export class BittrexTradesMapper implements Mapper<'bittrex', Trade> {
   constructor(private readonly exchange: Exchange) {}
 
   canHandle(message: BittrexMessageType) {
-    return Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'trade'
+    return Array.isArray(message.M) && message.M.length > 0 && message.M[0].M === 'trade' && message.M[0].A.length > 0
   }
 
   getFilters(symbols?: string[]) {
