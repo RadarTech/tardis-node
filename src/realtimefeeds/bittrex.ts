@@ -9,11 +9,10 @@ abstract class BittrexRealTimeFeedBase extends MultiConnectionRealTimeFeedBase {
   protected abstract suffixes: { [key: string]: number }
 
   protected *_getRealTimeFeeds(exchange: string, filters: Filter<string>[], timeoutIntervalMS?: number, onError?: (error: Error) => void) {
-    const wsFilters = filters.filter((f) => f.channel !== 'depthSnapshot')
-    if (wsFilters.length > 0) {
+    if (filters.length > 0) {
       yield new BittrexSingleConnectionRealTimeFeed(
         exchange,
-        wsFilters,
+        filters,
         this.wssURL,
         this.httpURL,
         this.suffixes,
@@ -96,7 +95,7 @@ class BittrexSingleConnectionRealTimeFeed extends RealTimeFeedBase {
         return
       }
 
-      const queryParameters = `${depthSnapshotFilter.channel}?depth=${this._suffixes['depth'] || 25}`
+      const queryParameters = `orderbook?depth=${this._suffixes['depth'] || 25}`
       const orderBookResponse = await got
         .get(`${this._httpURL}/markets/${symbol.toUpperCase()}/${queryParameters}`, {
           timeout: 2000
