@@ -1,5 +1,5 @@
 {
-  "name": "tardis-dev",
+  "name": "@radar/tardis-dev",
   "version": "12.4.13",
   "engines": {
     "node": ">=12"

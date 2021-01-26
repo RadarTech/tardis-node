@@ -1,7 +1,7 @@
 # tardis-dev
 
-[![Version](https://img.shields.io/npm/v/tardis-dev.svg)](https://www.npmjs.org/package/tardis-dev)
-[![Try on RunKit](https://badge.runkitcdn.com/tardis-dev.svg)](https://runkit.com/npm/tardis-dev)
+[![Version](https://img.shields.io/npm/v/@radar/tardis-dev.svg)](https://www.npmjs.org/package/@radar/tardis-dev)
+[![Try on RunKit](https://badge.runkitcdn.com/@radar/tardis-dev.svg)](https://runkit.com/npm/@radar/tardis-dev)
 
 <br/>
 
@@ -10,7 +10,7 @@ Node.js `tardis-dev` library provides convenient access to tick-level real-time 
 <br/>
 
 ```javascript
-const { replayNormalized, normalizeTrades, normalizeBookChanges } = require('tardis-dev')
+const { replayNormalized, normalizeTrades, normalizeBookChanges } = require('@radar/tardis-dev')
 
 const messages = replayNormalized(
   {
@@ -94,7 +94,7 @@ for await (const message of messages) {
 Requires Node.js v12+ installed.
 
 ```bash
-npm install tardis-dev --save
+npm install @radar/tardis-dev --save
 ```
 
 <br/>
@@ -114,7 +114,7 @@ npm install tardis-dev --save
 Example showing how to quickly display real-time spread and best bid/ask info across multiple exchanges at once. It can be easily adapted to do the same for historical data \(`replayNormalized` instead of `streamNormalized`).
 
 ```javascript
-const tardis = require('tardis-dev')
+const tardis = require('@radar/tardis-dev')
 const { streamNormalized, normalizeBookChanges, combine, compute, computeBookSnapshots } = tardis
 
 const exchangesToStream = [
@@ -172,7 +172,7 @@ for await (const message of messagesWithQuotes) {
 Example showing simple pattern of providing `async iterable` of market data messages to the function that can process them no matter if it's is real-time or historical market data. That effectively enables having the same 'data pipeline' for backtesting and live trading.
 
 ```javascript
-const tardis = require('tardis-dev')
+const tardis = require('@radar/tardis-dev')
 const { replayNormalized, streamNormalized, normalizeTrades, compute, computeTradeBars } = tardis
 
 const historicalMessages = replayNormalized(
@@ -222,7 +222,7 @@ await produceVolumeBasedTradeBars(historicalMessages)
 ### Stream real-time market data in exchange native data format
 
 ```javascript
-const { stream } = require('tardis-dev')
+const { stream } = require('@radar/tardis-dev')
 
 const messages = stream({
   exchange: 'bitmex',
@@ -244,7 +244,7 @@ for await (const message of messages) {
 ### Replay historical market data in exchange native data format
 
 ```javascript
-const { replay } = require('tardis-dev')
+const { replay } = require('@radar/tardis-dev')
 
 const messages = replay({
   exchange: 'bitmex',

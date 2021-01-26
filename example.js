@@ -1,4 +1,4 @@
-const { replayNormalized, streamNormalized, normalizeTrades, compute, computeTradeBars } = require('tardis-dev')
+const { replayNormalized, streamNormalized, normalizeTrades, compute, computeTradeBars } = require('@radar/tardis-dev')
 
 const historicalMessages = replayNormalized(
   {
